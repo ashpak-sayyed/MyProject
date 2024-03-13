@@ -40,7 +40,7 @@ router.get("/:id", wrapAsync(async (req, res) => {
 
 // Create route
 router.post("/", validateListing, wrapAsync(async (req, res, next) => {
-    const newListing = new Listing(req.body.listing);
+    const newListing = new Listing(req.body.listings);
     await newListing.save();
     res.redirect("/listings");
 }));
@@ -56,7 +56,7 @@ router.get("/:id/edit", wrapAsync(async (req, res) => {
 // Update route
 router.put("/:id", wrapAsync(async (req, res) => {
     let { id } = req.params;
-    await Listing.findByIdAndUpdate(id, { ...req.body.listings });
+    await Listing.findByIdAndUpdate(id, {...req.body.listings});
     res.redirect(`/listings/${id}`);
 }));
 
