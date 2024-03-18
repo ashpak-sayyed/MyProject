@@ -1,3 +1,7 @@
+if(process.env.NODE_ENV != "production") { 
+    require('dotenv').config();
+}
+
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
@@ -60,25 +64,17 @@ passport.deserializeUser(User.deserializeUser());
 app.use((req,res,next) => { 
     res.locals.success = req.flash("success");
     res.locals.error = req.flash("error");
-    console.log(res.locals.success);
+    res.locals.currUser = req.user;
     next();
 });
 
 
-// app.get("/demouser" , async (req , res) => { 
-//     let fakeUser = new User({
-//         email : "student@gmail.com",
-//         username : "d-student",
-//     });
-
-//     let registeredUser = await User.register(fakeUser , "helloworld");
-//     res.send(registeredUser);
-// });
 
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
-app.use("/" , userRouter);
 
+
+app.use("/" , userRouter);
 app.all("*", (req, res, next) => {
     next(new ExpressError(404, "Page not found"));
 });
